@@ -1,0 +1,63 @@
+{% extends "vtuapp/base.html" %} {% load crispy_forms_tags %}
+{% block body %}
+
+<div class="wrapper wrapper-login">
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <br />
+        
+        <form method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
+          <div class="container form-group bg-white border rounded">
+            <div class="container">
+              <div class="text-center text-white">
+                <p class="lead fw-normal text-black pt-5 display-7">
+                  Let's get you in there!
+                </p>
+          
+                <img src="/static/styling/img/logo-color.png" height="50" class="mb-4" />
+              </div>
+            </div>
+            {% for field in form %}
+            <div class="row m-3 p-3">{{field|as_crispy_field}}</div>
+
+            {% endfor %}
+
+            <div class="form-group form-action-d-flex m-3 mm-3 p-3">
+              <button
+                type="submit"
+                class="btn btn-secondary m-3 p-3 mt-sm-0 fw-bold"
+                onClick="this.form.submit(); this.disabled=true; this.innerText ='Authenticating.....'; ">
+                Login
+              </button>
+            </div>
+
+            <div class="login-account m-3 p-3">
+              <span class="msg">Already a member?</span>
+              <a href="{% url 'register' %}" id="show-signup" class="link">Register Here </a> &nbsp;&nbsp;| &nbsp;&nbsp;
+              <span class="msg">Forgotten Password?</span>
+              <a href="{% url 'password_reset' %}" id="show-signup" class="link">Reset Password </a>
+           
+          </div>
+        </form>
+      
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const queryString = window.location.search;
+  console.log(queryString);
+
+  const urlParams = new URLSearchParams(queryString);
+  const referal = urlParams.get('referal')
+  console.log('referal = ', referal)
+  if (referal != null) {
+      $('#id_referer_username').val(referal).attr('readonly', 'readonly')
+  }
+</script>
+{% endblock body %}
