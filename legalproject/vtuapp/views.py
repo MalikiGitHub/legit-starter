@@ -5,7 +5,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse_lazy
 from django.contrib.auth import login as auth_login
 from django.contrib.messages.views import SuccessMessageMixin
-from .forms import CustomUserCreationForm, LogInUserForm, PasswordChangingForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import *
 from django.views import generic
 from django.contrib.auth.views import PasswordChangeView
 from django.forms.utils import ErrorList
@@ -126,5 +127,45 @@ class PasswordChangeView(PasswordChangeView):
     
 def password_success(request):
     return render(request, 'registration/password_change_done.html')
+
+
+
+@login_required(login_url='login')
+def userProfile(request):
+    profile = request.user.userprofile
+    
+    context = {'profile':profile
+               }
+    return render (request, 'vtuapp/profile.html', context)
+
+@login_required(login_url='login')
+def editProfile(request):
+    profile = request.user.userprofile
+    form = UserProfileForm(instance=profile)  
+    context = {'form':form}
+    
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your Profile has been Updated!')
+            return redirect('dashborad')
+    return render(request, 'vtuapp/profile-edit.html', context)
+    
+
+
+# class UpdateUserProfile(LoginRequiredMixin, SuccessMessageMixin, generic.UpdateView):
+#     form_class = UserProfileForm
+#     login_url = 'login'
+#     template_name = 'vtuapp/edit_user_profile.html'
+#     success_url = reverse_lazy('dashboard')
+#     success_message = 'Profile Updated'
+    
+#     def get_object(self):
+#         return self.request.user.userprofile
+    
+#     def form_invalid(self, form):
+#         messages.add_message(self.request, messages.ERROR, 'Please submit the form carefully')
+#         return redirect('edit_profile')
 
 

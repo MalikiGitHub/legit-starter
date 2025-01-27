@@ -52,7 +52,8 @@ class CustomUserManager(UserManager):
 class CustomUser(AbstractUser):
     objects = CustomUserManager()
     email = models.EmailField()
-    FullName = models.CharField(max_length=200,  null=True)
+    first_name = models.CharField(max_length=200,  null=True)
+    last_name = models.CharField(max_length=200,  null=True)
     Address = models.CharField(max_length=500,  null=True)
     BankName = models.CharField(max_length=100, choices=Bank, blank=True)
     AccountNumber = models.CharField(max_length=40, blank=True)
@@ -70,14 +71,7 @@ class CustomUser(AbstractUser):
     Bonus = models.FloatField(default=0.00, null=True, validators=[ MinValueValidator(0.0)],)
     verify = models.BooleanField(default=False)
     email_verify = models.BooleanField(default=False)
-    DOB = models.DateField(null=True,blank=True,)
-    Gender = models.CharField(max_length=6, null=True,)
-    State_of_origin = models.CharField(max_length=100, null=True,)
-    Local_gov_of_origin = models.CharField(max_length=100, null=True,)
-    BVN = models.CharField(max_length=50, null=True,)
-    passport_photogragh = models.ImageField(upload_to="passport_images", null=True, help_text="Maximum of 50kb in size")
-    accounts = models.TextField(blank=True,null=True)
-
+    
 
     def f_account(self):
         try:
@@ -235,3 +229,116 @@ class Referal_list(models.Model):
         self.referal_user = mb
 
         super(Referal_list, self).save(*args, **kwargs)
+        
+        
+        
+        
+        
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(blank=True)
+    dob = models.DateField(null=True, blank=True)
+    profile_image = models.ImageField(default='default.jpg', upload_to="profile_pics", blank=True)
+    account_name = models.CharField(max_length=30, null=True, blank=True)
+    account_number = models.CharField(max_length=10, blank=True, null=True)
+    gender = models.CharField(max_length=6, null=True,)
+    state_of_origin = models.CharField(max_length=100, null=True,)
+    local_gov_of_origin = models.CharField(max_length=100, null=True, blank=True)
+    BVN = models.CharField(max_length=50, null=True, blank=True)
+    
+    
+    def __str__(self):
+        return f"{self.user}'s Profile"
+    
+    
+    
+    
+    
+class WebsiteConfiguration(models.Model):
+    primary_color = ColorField(default='#132563')
+    secondary_color = ColorField(null=True, blank=True, help_text="add this color if you want to use color mixure or gradient else leave blank to use single color")
+    intro_message = models.TextField(default="Refer people to legitdata and earn N500 immediately the person upgrade his/her account to affiliate or topuser",null=True, blank=True)
+    sms_notification_number = models.CharField(max_length=500, null=True, blank=True,help_text="Enter the phone number to recieve SMS notifications on")
+    support_phone_number = models.CharField(max_length=13, null=True, blank=True, help_text="Customer support phone number ,Whatsapp number  (start with 234)")
+    whatsapp_group_link = models.URLField(null=True, blank=True, help_text="Support group link if any")
+    gmail = models.EmailField( null=True, blank=True, help_text="Email to get notification on")
+    
+    ######## PAYMENT GATEWAYS
+    manual_bank_funding_limit =  models.PositiveIntegerField(default=5000, help_text="minimum amount allowed for FUND WITH MANUAL BANK TRANSFER")
+    manual_bank_funding_info_message = models.TextField(default="Your account will be suspended if you submit without transfer \n Please note that there is a charge of N50 if the amount greater than N9,999.",null=True, blank=True)
+    Paystack_secret_key = models.CharField(max_length=500, null=True, blank=True,help_text="Enter your Paystack SCRET API KEY here if you are using Paystack, else leave blank")
+    monnify_API_KEY = models.CharField(max_length=500, null=True, blank=True,help_text="Enter your monnify  API_KEY here if you are using monnify  else leave blank")
+    monnify_SECRET_KEY = models.CharField(max_length=500, null=True, blank=True,help_text="Enter your monnify Secret Key here if you are using monnify else leave blank")
+    monnify_contract_code = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your monnify contarct code here if you are using monnify else leave blank")
+    
+    ########### API/AUTOMATION
+    ringo_email = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your RINGO Email here if you are using VTpass else leave blank")
+    ringo_password = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your RINGO password here if you are using VTpass else leave blank")
+    
+    vtpass_email = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your Vtpass Email here if you are using VTpass else leave blank")
+    vtpass_password = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your Vtpass password here if you are using VTpass else leave blank")
+    
+    hollatag_username = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your hollatag username here if you are using hollatag else leave blank")
+    hollatag_password = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your hollatag  password here if you are using hollatag else leave blank")
+                                         
+    sme_plug_secret_key = models.CharField(max_length=500, null=True, blank=True,help_text="Enter your SMEPLUG SCRET API KEY here if you are using SMEplug else leave blank")
+    
+    simhost_API_key = models.CharField(max_length=500, null=True, blank=True,help_text="Enter your simhost APIKEY here if you are using simhost else leave blank")
+    
+    msplug_API_key = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your msplug APIKEY here if you are using msplug else leave blank")
+    
+    vtu_auto_email = models.CharField(max_length=500, null=True, blank=True,help_text="Enter your vtuauto Email here if you are using vtuauto else leave blank")
+    vtu_auto_password = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your vtuauto Password here if you are using vtuauto else leave blank")
+    
+    mobilenig_username = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your mobilenig username here if you are using mobilenig else leave blank")
+    mobilenig_api_key = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your mobilenig APIKEY here if you are using mobilenig else leave blank")
+    idchecker_api_key = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your idchecker APIKEY here if you are using idchecker else leave blank")
+    uws_token = models.TextField( null=True, blank=True,)
+    qtopup_api_key = models.CharField(max_length=500, null=True, blank=True, help_text="Enter your qtopup APIKEY here if you are using qtopup else leave blank")
+    
+    ########## MSORD WEB API
+    msorg_web_url = models.URLField( null=True, blank=True,)
+    msorg_web_api_key = models.TextField(max_length=500, null=True, blank=True, help_text="Enter your MSORG website APIKEY here if you are using website developed by MSORG else leave blank")
+    msorg_web_url_2  = models.URLField( null=True, blank=True,)
+    msorg_web_api_key_2  = models.TextField(max_length=500, null=True, blank=True, help_text="Enter your APIKEY for your 2nd MSORG WEBSITE here if you are using website developed by MSORG else leave blank")
+    msorg_web_url_3 = models.URLField( null=True, blank=True,)
+    msorg_web_api_key_3 = models.TextField(max_length=500, null=True, blank=True, help_text="Enter your APIKEY for your 3rd choice MSORG WEBSITE here if you are using website developed by MSORG else leave blank")
+    
+    ############## ACCOUNT UPGRADE
+    affiliate_upgrade_fee = models.IntegerField(default=2000,blank=True, null=True, verbose_name="Upgrade to Affiliate charge")
+    affiliate_to_topuser_upgrade_fee = models.IntegerField(default=3000,blank=True, null=True,verbose_name="Upgrade from Affiliate to TopUser charge")
+    topuser_upgrade_fee = models.IntegerField(default=5000,blank=True, null=True, verbose_name="Upgrade to TopUser charge")
+    
+    ############## REFERRAL BONUS
+    affiliate_referral_bonus = models.IntegerField(default=500,blank=True, null=True, help_text="set amount upline/referee earns when downline/referral upgrades to Affiliate package")
+    affiliate_to_topuser_referral_bonus = models.IntegerField(default=500,blank=True, null=True, help_text="set amount upline/referee earns when downline/referral upgrades from Affiliate to TopUser package")
+    topuser_referral_bonus = models.IntegerField(default=1000,blank=True, null=True, help_text="set amount upline/referee earns when downline/referral upgrades to TopUser package")
+    
+    ############## CONTROLLER
+    ResultCheckerSource = models.CharField(max_length=50, blank=True, null=True, default="API", choices=( ('API','API'),('MANUAL','MANUAL'), ))
+    Cable_provider = models.CharField(max_length=50, blank=True, null=True, default="VTPASS", choices=( ('VTPASS','VTPASS'),('RINGO','RINGO'), ))
+    Bill_provider = models.CharField(max_length=50, blank=True, null=True, default="VTPASS", choices=( ('VTPASS','VTPASS'),('RINGO','RINGO'), ))
+    disable_Transaction_limit = models.BooleanField(max_length=50, default=False, choices=( (True,'YES'),(False,'NO'), ), verbose_name="Disable Transaction limit for unverified user")
+
+    ############## UNVERIFIED USER LIMITS
+    # unverified_users_data_TopUp_limit =  models.PositiveIntegerField(default=10000, help_text="maximum amount of data TopUp allowed for unverified users DAILY")
+    # unverified_users_airtime_TopUp_limit =  models.PositiveIntegerField(default=10000, help_text="maximum amount of Airtime TopUp allowed for unverified users DAILY")
+    unverified_users_daily_withdraws_limit =  models.PositiveIntegerField(default=5000, help_text="maximum amount of withdrawal allowed for unverified users DAILY")
+    unverified_users_transfer_limit =  models.PositiveIntegerField(default=5000, help_text="total amount of transfer allowed for unverified users DAILY")
+    unverified_users_daily_transation_limit =  models.PositiveIntegerField(default=30000, help_text="total amount of transaction allowed for unverified users DAILY")
+
+
+    def save(self, *args, **kwargs):
+        if WebsiteConfiguration.objects.all():
+            WebsiteConfiguration.objects.all().delete()
+
+        super(WebsiteConfiguration, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return "Website Configuration"
+
+    class Meta:
+        verbose_name_plural = 'WEBSITE CONFIGURATIONS'
+        
+config = ''
+config = WebsiteConfiguration.objects.all().first()

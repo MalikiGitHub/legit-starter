@@ -14,6 +14,9 @@ urlpatterns = [
     path('change_password/',login_required(views.PasswordChangeView.as_view(template_name='registration/password_change_form.html')), name='password-change'),
     path('change-password-done/', views.password_success, name='password_success'),
     path('login/', views.LogIn.as_view(), name='login'),
+    path('profile/', views.userProfile, name='user-profile'),
+    path('edit-profile/', views.editProfile, name='edit-profile'),
+    # path('update-user-profile/<int:pk>/', views.UpdateUserProfile.as_view(), name='user_profile_update'),
     
     # Reset password urls
     path('password_reset/', auth_view.PasswordResetView.as_view(), name='password_reset'),

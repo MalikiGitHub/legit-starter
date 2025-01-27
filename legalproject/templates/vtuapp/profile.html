@@ -1,0 +1,78 @@
+{% extends 'vtuapp/base.html' %} {% block title %}{{user.username}}'s
+Profile{%endblock title %} {% block body %} {% if user.is_authenticated %}
+
+<div class="container text-center">
+  <div class="row align-items-center">
+    <div class="col-md-4">
+      <h4 class="fw-bolder text-center">
+        <span class="text-secondary">{{user.username}}'s Profile!!</span>
+      </h4>
+      <div class="text-center">
+        <img
+          class="rounded"
+          src="{{profile.profile_image.url}}"
+          alt="{{user.username}}'s profile image"
+          width="10%"
+          height="10%"
+        />
+
+        <h3 class="fs-1 fw-bolder mt-3">
+          {{user.first_name}} {{user.last_name}} (@{{user.username}})
+        </h3>
+
+        {% if profile.bio %}
+        <p>{{profile.bio}}</p>
+        {% else %}
+        <p><span class="text-danger">No Bio found </span></p>
+        {% endif %}
+
+          {% if profile.location %}
+          <span
+            ><i class="fas fa-location-arrow text-primary"></i>
+            {{profile.location}}</span
+          >
+          {% endif %} {% if profile.dob %}
+          <p
+            ><i class="fas fa-birthday-cake text-primary"></i>
+            {{profile.dob}}</p>
+          {% endif %}
+           {% if user.email %}
+          <p>
+            <i class="fa fa-envelope text-primary"></i>
+            {{  user.email}}</p>
+          {% endif %}
+          <a class="badge rounded-pill text-bg-primary" href="{% url 'edit-profile' %}"><i class="fas fa-edit"></i> Edit</a>
+           <!-- <a href="{% url 'edit-profile' %}"> <i class="fas fa-edit"></i> </a>  -->
+      </div>
+    </div>  
+
+          <div class="col-md-8 card mt-4">
+            <h5 class="fw-bold">Account Name</h5>
+            {{profile.account_name}}
+          
+          
+            <h5 class="fw-bold">Account Number </h5>
+            <span> {{profile.account_number}} </span>
+          
+          
+            <h5 class="fw-bold">Phone Number</h5>
+            <p>{{user.Phone}}</p>
+          
+          
+            <h5 class="fw-bold">Number of referrals</h5>
+            <p>{{user.referals}}</p>
+          
+          
+            <h5 class="fw-bold">Account Number</h5>
+            <p>{{profile.account_number}}</p>
+          
+          
+            <h5 class="fw-bold">Account Number</h5>
+            <p>{{profile.account_number}}</p>
+
+          </div>
+      
+    
+  </div>
+</div>
+{% endif %} {% endblock body %}
