@@ -29,3 +29,4 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 admin.site.register(CustomUser,CustomUserAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(WebsiteConfiguration)
